@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>음성 데이터 :</h1>
+    <button type="button" onclick="startSpeech();">Start Record</button>
+    <button type="button" onclick="stopSpeech();">Stop Record</button>
+
+    <script>
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+      const mic = new SpeechRecognition();
+      mic.continuous = true;
+      mic.lang = true;
+      console.log(mic);
+
+      function startSpeech() {
+        mic.start();
+        console.log("mic onend", mic.onend);
+        console.log("mic grammers", mic.grammers);
+      }
+      function stopSpeech() {
+        mic.stop();
+      }
+      console.log("mic onend", mic.onend);
+      console.log("mic grammers", mic.grammers);
+    </script>
+  </body>
+</html>

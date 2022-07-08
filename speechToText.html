@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <h1>음성 데이터 :</h1>
+
+    <button type="button" onclick="startSpeechRecognition();">
+      Start Record
+    </button>
+    <button type="button" onclick="endSpeechRecognition();">Stop Record</button>
+
+    <ul id="speech_result"></ul>
+    <script>
+      let recognition = null;
+
+      function checkCompatibility() {
+        recognition = new (window.SpeechRecognition ||
+          window.webkitSpeechRecognition)();
+        console.log("load page");
+        recognition.lang = "ko";
+        recognition.maxAlternatives = 5;
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
+        if (!recognition) {
+          alert("You cannot use speech api.");
+        }
+      }
+
+      function startSpeechRecognition() {
+        console.log("Start");
+
+        recognition.addEventListener("speechstart", () => {
+          console.log("Speech Start");
+        });
+
+        recognition.addEventListener("speechend", () => {
+          console.log("Speech End");
+        });
+
+        recognition.addEventListener("result", (event) => {
+          console.log("Speech Result", event.results[0].isFinal);
+          const isFinal = event.results[0].isFinal;
+          if (isFinal == true) {
+            console.log("끝남");
+            recognition.stop();
+          } else {
+            console.log("계속 말하는 중");
+            text = event.results[0][0].transcript;
+            document.getElementById("speech_result").append(text);
+          }
+          //   console.log(text);
+          //   document.getElementById("speech_result").append(text);
+        });
+
+        recognition.start();
+      }
+
+      function endSpeechRecognition() {
+        recognition.stop();
+        document.getElementById("speech_result").innerHTML = "";
+      }
+
+      window.addEventListener("load", checkCompatibility);
+    </script>
+  </body>
+</html>
