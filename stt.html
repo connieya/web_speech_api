@@ -9,6 +9,7 @@
     <div class="words" contenteditable></div>
 
     <script>
+      const words = document.querySelector(".words");
       window.SpeechRecognition =
         window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -22,15 +23,19 @@
       let makeNewTextContent = function () {
         p = document.createElement("p");
         document.querySelector(".words").appendChild(p);
+        console.log("p = ", p);
       };
 
       let p = null;
 
       recognition.start();
+      console.log("start .....");
       recognition.onstart = function () {
+        console.log("onstart ...");
         makeNewTextContent(); // 음성 인식 시작시마다 새로운 문단을 추가한다.
       };
       recognition.onend = function () {
+        console.log("onend ... ");
         recognition.start();
       };
 
