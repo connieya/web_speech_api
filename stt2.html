@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/stt.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="words" contenteditable></div>
+    <script>
+      function timeConverter(t) {
+        t = t * 1000;
+        var date = new Date(t);
+        var year = date.getFullYear();
+        var month = "0" + (date.getMonth() + 1);
+        var day = "0" + date.getDate();
+        var hour = "0" + date.getHours();
+        var minute = "0" + date.getMinutes();
+        var second = "0" + date.getSeconds();
+        return (
+          year +
+          "." +
+          month.substr(-2) +
+          "." +
+          day.substr(-2) +
+          " " +
+          hour.substr(-2) +
+          ":" +
+          minute.substr(-2) +
+          ":" +
+          second.substr(-2)
+        );
+      }
+      window.SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+      let recognition = new SpeechRecognition();
+      recognition.interimResults = true;
+      recognition.lang = "ko-KR";
+      let makeNewTextContent = function () {
+        p = document.createElement("p");
+        document.querySelector(".words").appendChild(p);
+      };
+      let p = null;
+      let check = false;
+      recognition.start();
+      // 음성인식 시작 로그 찍어야함
+      recognition.onstart = function () {
+        check = false;
+        makeNewTextContent(); // 음성 인식 시작시마다 새로운 문단을 추가한다.
+      };
+      recognition.onend = function () {
+        const date = new Date();
+        t = date.getTime();
+        console.log("끝시간 :", new Date());
+        recognition.start();
+      };
+      recognition.onresult = function (e) {
+        if (check !== true) {
+          const date = new Date();
+          t = date.getTime();
+          console.log("시작시간 :", new Date());
+          check = true;
+        }
+        let texts = Array.from(e.results)
+          .map((results) => results[0].transcript)
+          .join("");
+        console.log("texts = ", texts);
+        p.textContent = texts;
+      };
+    </script>
+  </body>
+</html>

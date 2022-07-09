@@ -15,6 +15,9 @@
       let recognition = new SpeechRecognition();
       recognition.interimResults = true;
       recognition.lang = "ko-KR";
+      // recognition.continuous = true;
+      // recognition.maxAlternatives = 5;
+      console.log(recognition);
 
       let makeNewTextContent = function () {
         p = document.createElement("p");
@@ -37,9 +40,11 @@
           .join("");
 
         console.log("texts = ", texts);
+        // console.log("today = ", new Date());
         texts.replace(/느낌표|강조|뿅/gi, "❗️");
 
         p.textContent = texts;
+        // console.log("p = ", p);
       };
     </script>
   </body>
