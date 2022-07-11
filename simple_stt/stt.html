@@ -6,9 +6,22 @@
     <link rel="stylesheet" href="css/stt.css" />
   </head>
   <body>
+    <button onclick="start_rec()">기록 시작</button>
+    <button onclick="stop_rec();">기록 중지</button>
     <div class="words" contenteditable></div>
 
     <script>
+      let keep_going = true;
+
+      function start_rec() {
+        keep_going = true;
+      }
+
+      function stop_rec() {
+        console.log("stop rec!!!");
+        keep_going = false;
+      }
+
       const words = document.querySelector(".words");
       window.SpeechRecognition =
         window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -20,7 +33,7 @@
       // recognition.maxAlternatives = 5;
       console.log(recognition);
 
-      let makeNewTextContent = function () {
+      let makeNewTextContent = () => {
         p = document.createElement("p");
         document.querySelector(".words").appendChild(p);
       };
@@ -30,24 +43,27 @@
       recognition.start();
       console.log("start .....");
 
-      recognition.onstart = () => {
-        console.log("onstart ...");
-        makeNewTextContent(); // 음성 인식 시작시마다 새로운 문단을 추가한다.
-      };
-
       recognition.onend = () => {
         console.log("onend ... ");
         recognition.start();
       };
 
-      recognition.onresult = (event) => {
-        let texts = Array.from(event.results)
-          .map((res) => res[0].transcript)
-          .join("");
+      if (keep_going === true) {
+        console.log("dd");
+        recognition.onstart = () => {
+          makeNewTextContent(); // 음성 인식 시작시마다 새로운 문단을 추가한다.
+          console.log("onstart ...");
+        };
 
-        console.log("texts = ", texts);
-        p.textContent = texts;
-      };
+        recognition.onresult = (event) => {
+          let texts = Array.from(event.results)
+            .map((res) => res[0].transcript)
+            .join("");
+
+          console.log("texts = ", texts);
+          p.textContent = texts;
+        };
+      }
     </script>
   </body>
 </html>
