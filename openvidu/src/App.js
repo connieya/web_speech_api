@@ -19,14 +19,7 @@ class App extends Component {
       publisher: undefined,
       subscribers: [],
     };
-
-    this.joinSession = this.joinSession.bind(this);
-    this.leaveSession = this.leaveSession.bind(this);
     this.switchCamera = this.switchCamera.bind(this);
-    this.handleChangeSessionId = this.handleChangeSessionId.bind(this);
-    this.handleChangeUserName = this.handleChangeUserName.bind(this);
-    this.handleMainVideoStream = this.handleMainVideoStream.bind(this);
-    this.onbeforeunload = this.onbeforeunload.bind(this);
   }
 
   componentDidMount() {
@@ -37,31 +30,31 @@ class App extends Component {
     window.removeEventListener("beforeunload", this.onbeforeunload);
   }
 
-  onbeforeunload(event) {
+  onbeforeunload = (event) => {
     this.leaveSession();
-  }
+  };
 
-  handleChangeSessionId(e) {
+  handleChangeSessionId = (e) => {
     this.setState({
       mySessionId: e.target.value,
     });
-  }
+  };
 
-  handleChangeUserName(e) {
+  handleChangeUserName = (e) => {
     this.setState({
       myUserName: e.target.value,
     });
-  }
+  };
 
-  handleMainVideoStream(stream) {
+  handleMainVideoStream = (stream) => {
     if (this.state.mainStreamManager !== stream) {
       this.setState({
         mainStreamManager: stream,
       });
     }
-  }
+  };
 
-  deleteSubscriber(streamManager) {
+  deleteSubscriber = (streamManager) => {
     let subscribers = this.state.subscribers;
     let index = subscribers.indexOf(streamManager, 0);
     if (index > -1) {
@@ -70,9 +63,9 @@ class App extends Component {
         subscribers: subscribers,
       });
     }
-  }
+  };
 
-  joinSession() {
+  joinSession = (e) => {
     // --- 1) Get an OpenVidu object ---
 
     this.OV = new OpenVidu();
@@ -164,9 +157,9 @@ class App extends Component {
         });
       }
     );
-  }
+  };
 
-  leaveSession() {
+  leaveSession = (event) => {
     // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
 
     const mySession = this.state.session;
@@ -185,7 +178,7 @@ class App extends Component {
       mainStreamManager: undefined,
       publisher: undefined,
     });
-  }
+  };
 
   async switchCamera() {
     try {
