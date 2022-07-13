@@ -78,7 +78,7 @@ function handleRoomSubmit(event) {
   console.log(roomName);
   input.value = "";
   // 마이크를 켠다
-  recognition.start();
+
   console.log("mike on");
 }
 
