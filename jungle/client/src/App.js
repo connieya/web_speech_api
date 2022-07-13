@@ -30,77 +30,81 @@ function App() {
     talking_end_time: 0,
   });
 
-  recognition.onresult = function (e) {
-    if (soundDetectCheck !== true) {
-      const date = new Date();
-      setSockest({
-        message: "",
-        talking_begin_time: date.getTime(),
-      });
-      setSoundDetectCheck(true);
-    }
-    let text = Array.from(e.results)
-      .map((results) => results[0].transcript)
-      .join("");
-    // setTranscript(text);
-    console.log(`음성 인식 기록 시발... ${text}`);
+  // useEffect(() => {
+  //   recognition.onstart = function () {
+  //     setSoundDetectCheck(false);
+  //   };
+
+  //   recognition.onend = function () {
+  //     const date = new Date();
+  //     if (transcript !== "") {
+  //       setSockest({
+  //         message: transcript,
+  //         talking_end_time: date.getTime(),
+  //         roomName: room,
+  //       });
+
+  //       console.log(`씨발 .... ${transcript}`);
+
+  //       if (transcript === "막둥아 기록 중지") {
+  //         setSockest({
+  //           message: "기록중지@",
+  //         });
+  //         socket.emit("new_message", sockets, room, () => {});
+  //       } else if (transcript === "막둥아 기록 시작") {
+  //         setSockest({
+  //           message: "기록시작@",
+  //         });
+  //         socket.emit("new_message", sockets, room, () => {});
+  //       } else if (transcript.includes("막둥아 별표")) {
+  //         setSockest({
+  //           message: "막둥아 별표@",
+  //         });
+  //         socket.emit("new_message", sockets, room, () => {});
+  //       } else if (transcript.includes("막둥아 종료")) {
+  //         socket.emit("forceDisconnect");
+  //       } else {
+  //         socket.emit("new_message", sockets, room, () => {});
+  //       }
+  //     }
+
+  //     recognition.onresult = function (e) {
+  //       if (soundDetectCheck !== true) {
+  //         const date = new Date();
+  //         setSockest({
+  //           message: "",
+  //           talking_begin_time: date.getTime(),
+  //         });
+  //         setSoundDetectCheck(true);
+  //       }
+  //       let text = Array.from(e.results)
+  //         .map((results) => results[0].transcript)
+  //         .join("");
+  //       // setTranscript(text);
+  //       console.log(`음성 인식 기록 시발... ${text}`);
+  //     };
+
+  //     recognition.start();
+  //   };
+  // }, []);
+
+  const showRoom = () => {
+    setHidden((prevHidden) => !prevHidden);
   };
 
-  useEffect(() => {
-    recognition.onstart = function () {
-      setSoundDetectCheck(false);
-    };
-
-    recognition.onend = function () {
-      const date = new Date();
-      if (transcript !== "") {
-        setSockest({
-          message: transcript,
-          talking_end_time: date.getTime(),
-          roomName: room,
-        });
-
-        console.log(`씨발 .... ${transcript}`);
-
-        if (transcript === "막둥아 기록 중지") {
-          setSockest({
-            message: "기록중지@",
-          });
-          socket.emit("new_message", sockets, room, () => {});
-        } else if (transcript === "막둥아 기록 시작") {
-          setSockest({
-            message: "기록시작@",
-          });
-          socket.emit("new_message", sockets, room, () => {});
-        } else if (transcript.includes("막둥아 별표")) {
-          setSockest({
-            message: "막둥아 별표@",
-          });
-          socket.emit("new_message", sockets, room, () => {});
-        } else if (transcript.includes("막둥아 종료")) {
-          socket.emit("forceDisconnect");
-        } else {
-          socket.emit("new_message", sockets, room, () => {});
-        }
-      }
-
-      recognition.start();
-    };
-  });
-
   const joinRoom = (event) => {
-    console.log(`씨발 ㅡㅡ ${event}`);
     event.preventDefault();
     const date = new Date();
     setMeetingStart(date.getTime());
-    console.log(`미팅 시작 시간 시발아 ${meetingStart}`);
+    console.log(`미팅 시작 시간  ${meetingStart}`);
+    console.log(`닉네임  ${nickname}`);
     socket.emit("join_room", room, meetingStart);
-    setHidden(false);
-    recognition.start();
+    showRoom();
   };
 
   useEffect(() => {
     socket.on("welcome", ({ cntRoom }) => {
+      console.log(`클라이언트 welcome 응답 ${cntRoom}`);
       setNewCount(cntRoom);
     });
   }, []);
@@ -135,7 +139,13 @@ function App() {
           <ul></ul>
         </div>
       ) : (
-        <Chat nickname={nickname} newCount={newCount} socket={socket} />
+        <Chat
+          nickname={nickname}
+          roomName={room}
+          socket={socket}
+          hidden={hidden}
+          showRoom={showRoom}
+        />
       )}
     </>
   );
