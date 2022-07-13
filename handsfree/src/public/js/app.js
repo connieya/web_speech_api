@@ -73,7 +73,7 @@ function handleRoomSubmit(event) {
   const date = new Date();
   meeting_start_time = date.getTime();
 
-  socket.emit("enter_room", input.value, meeting_start_time, showRoom);
+  socket.emit("join_room", input.value, meeting_start_time, showRoom);
   roomName = input.value; // 얘가 showroom보다 먼저 실행됨. showroom은 callback 함수이므로!!
   console.log(roomName);
   input.value = "";
@@ -86,12 +86,6 @@ function handleRoomSubmit(event) {
 recognition.onstart = function () {
   sound_detect_check = false;
 };
-
-// 막둥이 검사하는 함수
-function mak_doong(texts) {
-  if (texts === "") {
-  }
-}
 
 // 음성인식 감지 안되면 소켓에 종료시간과 메시지를 등록하고 초기화 => 녹음 다시 시작
 recognition.onend = function () {

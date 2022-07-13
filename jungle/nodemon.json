@@ -1,4 +1,3 @@
 {
-  "ignore": ["src/public/*"],
   "exec": "npx babel-node backend.js"
 }
