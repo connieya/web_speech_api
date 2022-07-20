@@ -1,13 +1,25 @@
+import React, { useEffect, useState } from "react";
 import "./App.css";
-import Dictaphone from "./Dictaphone";
+import * as speech from "@tensorflow-models/speech-commands";
+import * as tf from "@tensorflow/tfjs";
 
-function App() {
-  return (
-    <div className='App'>
-      <h1>dd</h1>
-      <Dictaphone />
-    </div>
-  );
-}
+const App = () => {
+  const [model, setModel] = useState(null);
+  const [action, setAction] = useState(null);
+  const [labels, setLabels] = useState(null);
+
+  const loadModel = async () => {
+    const recognizer = await speech.create("BROWSER_FFT");
+    console.log("Model Loaded");
+    await recognizer.ensureModelLoaded();
+    console.log(" @@", recognizer.wordLabels());
+  };
+
+  useEffect(() => {
+    loadModel();
+  }, []);
+
+  return <div className='App'></div>;
+};
 
 export default App;
